@@ -1,21 +1,27 @@
-CarInfos
+# CarInfos
+
 CarInfos is a RESTful API built using ASP.NET Core Web API and Entity Framework, designed to provide basic CRUD operations for managing car information. The API allows users to interact with a database of cars, supporting operations such as retrieving car data, adding new cars, updating existing records, and deleting cars.
 
-Features
-GET all cars: Retrieve a list of all cars in the database.
-GET car by Id: Retrieve a specific car by its unique ID.
-POST car: Add a new car to the database.
-PUT car: Update the details of an existing car by its ID.
-DELETE car: Remove a car from the database using its ID.
-Technologies Used
-ASP.NET Core Web API: A framework for building APIs in .NET.
-Entity Framework Core: An Object-Relational Mapper (ORM) that allows interaction with the database using .NET objects.
-RESTful API: The API adheres to REST principles to provide a stateless communication protocol for interacting with the server.
-API Endpoints
-1. GET /api/cars
+# Features
+
+- GET all cars: Retrieve a list of all cars in the database.
+- GET car by Id: Retrieve a specific car by its unique ID.
+- POST car: Add a new car to the database.
+- PUT car: Update the details of an existing car by its ID.
+- DELETE car: Remove a car from the database using its ID.
+
+# Technologies Used
+
+- ASP.NET Core Web API: A framework for building APIs in .NET.
+- Entity Framework Core: An Object-Relational Mapper (ORM) that allows interaction with the database using .NET objects.
+- RESTful API: The API adheres to REST principles to provide a stateless communication protocol for interacting with the server.
+
+# API Endpoints
+
+## GET /api/cars
 Retrieve a list of all cars in the database.
 
-Request URL
+## Request URL
 https://localhost:7254/api/Cars
 
 [
@@ -98,10 +104,10 @@ https://localhost:7254/api/Cars
   }
 ]
 
-2. GET /api/cars/{id}
+## GET /api/cars/{id}
 Retrieve the details of a specific car by ID.
 
-Request URL
+## Request URL
 https://localhost:7254/api/Cars/4
 
 {
@@ -116,10 +122,10 @@ https://localhost:7254/api/Cars/4
   "isAvailable": true
 }
 
-3. POST /api/cars
+## POST /api/cars
 Add a new car to the database.
 
-Request URL
+## Request URL
 https://localhost:7254/api/Cars
 
 {
@@ -134,10 +140,10 @@ https://localhost:7254/api/Cars
   "isAvailable": false
 }
 
-4. PUT /api/cars/{id}
+## PUT /api/cars/{id}
 Update an existing car's details.
 
-Request URL
+## Request URL
 https://localhost:7254/api/Cars/4
 
 {
@@ -152,20 +158,19 @@ https://localhost:7254/api/Cars/4
   "isAvailable": true
 }
 
-5. DELETE /api/cars/{id}
+## DELETE /api/cars/{id}
 Delete a car from the database by its ID.
 
-Request URL
+## Request URL
 https://localhost:7254/api/Cars/5
 
 Record succefully deleted!
 
-Database Configuration
+# Database Configuration
+
 This project uses Entity Framework Core to interact with the database. Ensure that you have a local SQL Server instance or use the appsettings.json to configure a connection string for your preferred database.
 
-Contributions
-Feel free to fork this repository, open issues, and submit pull requests for enhancements or bug fixes.
+# Contributions
 
-License
-This project is licensed under the MIT License - see the LICENSE file for details.
+Feel free to fork this repository, open issues, and submit pull requests for enhancements or bug fixes.
 
