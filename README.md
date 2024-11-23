@@ -1,9 +1,7 @@
 # CarInfos
-
 CarInfos is a RESTful API built using ASP.NET Core Web API and Entity Framework, designed to provide basic CRUD operations for managing car information. The API allows users to interact with a database of cars, supporting operations such as retrieving car data, adding new cars, updating existing records, and deleting cars.
 
 # Features
-
 - GET all cars: Retrieve a list of all cars in the database.
 - GET car by Id: Retrieve a specific car by its unique ID.
 - POST car: Add a new car to the database.
@@ -11,7 +9,6 @@ CarInfos is a RESTful API built using ASP.NET Core Web API and Entity Framework,
 - DELETE car: Remove a car from the database using its ID.
 
 # Technologies Used
-
 - ASP.NET Core Web API: A framework for building APIs in .NET.
 - Entity Framework Core: An Object-Relational Mapper (ORM) that allows interaction with the database using .NET objects.
 - RESTful API: The API adheres to REST principles to provide a stateless communication protocol for interacting with the server.
@@ -167,10 +164,8 @@ https://localhost:7254/api/Cars/5
 Record succefully deleted!
 
 # Database Configuration
-
 This project uses Entity Framework Core to interact with the database. Ensure that you have a local SQL Server instance or use the appsettings.json to configure a connection string for your preferred database.
 
 # Contributions
-
 Feel free to fork this repository, open issues, and submit pull requests for enhancements or bug fixes.
 
