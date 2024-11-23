@@ -1,7 +1,4 @@
-﻿//using CarInfo.Data;
-//using CarInfo.Models;
-//using CarInfo.Models.Entities;
-using CarInfos.Data;
+﻿using CarInfos.Data;
 using CarInfos.Models.Entity;
 using CarInfos.Models;
 using Microsoft.AspNetCore.Http;
