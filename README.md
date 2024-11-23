@@ -18,7 +18,7 @@ CarInfos is a RESTful API built using ASP.NET Core Web API and Entity Framework,
 ## GET /api/cars
 Retrieve a list of all cars in the database.
 
-## Request URL
+### Request URL
 https://localhost:7254/api/Cars
 
 [
@@ -104,7 +104,7 @@ https://localhost:7254/api/Cars
 ## GET /api/cars/{id}
 Retrieve the details of a specific car by ID.
 
-## Request URL
+### Request URL
 https://localhost:7254/api/Cars/4
 
 {
@@ -122,7 +122,7 @@ https://localhost:7254/api/Cars/4
 ## POST /api/cars
 Add a new car to the database.
 
-## Request URL
+### Request URL
 https://localhost:7254/api/Cars
 
 {
@@ -140,7 +140,7 @@ https://localhost:7254/api/Cars
 ## PUT /api/cars/{id}
 Update an existing car's details.
 
-## Request URL
+### Request URL
 https://localhost:7254/api/Cars/4
 
 {
@@ -158,7 +158,7 @@ https://localhost:7254/api/Cars/4
 ## DELETE /api/cars/{id}
 Delete a car from the database by its ID.
 
-## Request URL
+### Request URL
 https://localhost:7254/api/Cars/5
 
 Record succefully deleted!
