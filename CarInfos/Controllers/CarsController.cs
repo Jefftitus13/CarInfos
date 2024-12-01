@@ -4,6 +4,7 @@ using CarInfos.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CarInfo.Controllers
 {
@@ -18,7 +19,8 @@ namespace CarInfo.Controllers
             this.dbContext = dbContext;
         }
         //Get methods
-        [HttpGet]
+        [HttpGet(Name = "GetCarsInfos")]
+        [Authorize]
         public IActionResult GetAllCars()
         {
             return Ok(dbContext.Cars.ToList());
@@ -26,6 +28,7 @@ namespace CarInfo.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
+        [Authorize]
         public IActionResult GetCarsById(int id)
         {
             var car = dbContext.Cars.Find(id);
@@ -35,8 +38,10 @@ namespace CarInfo.Controllers
             }
             return Ok(car);
         }
+
         //Post method
         [HttpPost]
+        [Authorize]
         public IActionResult AddCars(AddCarsDto addCarsDto)
         {
             var carsEntity = new Cars()
@@ -57,6 +62,7 @@ namespace CarInfo.Controllers
         //Put method
         [HttpPut]
         [Route("{id:int}")]
+        [Authorize]
         public IActionResult UpdateCars(int id, UpdateCarsDto updateCarsDto)
         {
             var cars = dbContext.Cars.Find(id);
@@ -81,6 +87,7 @@ namespace CarInfo.Controllers
         //Delete method
         [HttpDelete]
         [Route("{id:int}")]
+        [Authorize]
         public IActionResult DeleteCars(int id)
         {
             var delCars = dbContext.Cars.Find(id);
