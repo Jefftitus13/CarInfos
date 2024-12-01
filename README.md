@@ -7,11 +7,31 @@ CarInfos is a RESTful API built using ASP.NET Core Web API and Entity Framework,
 - POST car: Add a new car to the database.
 - PUT car: Update the details of an existing car by its ID.
 - DELETE car: Remove a car from the database using its ID.
+- Authentication and Authorization (Carauth): Secure API endpoints using token-based authentication and role-based authorization.
 
 # Technologies Used
 - ASP.NET Core Web API: A framework for building APIs in .NET.
 - Entity Framework Core: An Object-Relational Mapper (ORM) that allows interaction with the database using .NET objects.
 - RESTful API: The API adheres to REST principles to provide a stateless communication protocol for interacting with the server.
+- Authentication and Authorization (Carauth): Secure user access and control using JWT-based authentication and role-based authorization.
+
+# Features
+- JWT Authentication: Secure token-based authentication mechanism for users.
+- Role-based Authorization: Control access to specific endpoints based on user roles (e.g., Admin, User).
+- Secure Data Access: Protect sensitive operations like adding, updating, and deleting cars.
+
+# Configuration
+1. Add user roles and configure claims-based policies in Startup.cs or Program.cs.
+2. Ensure appsettings.json includes configuration for JWT token generation, such as the secret key and issuer details.
+
+# Secured Endpoints
+## Admin-only operations:
+- POST /api/cars
+- PUT /api/cars/{id}
+- DELETE /api/cars/{id}
+## Authenticated user operations:
+- GET /api/cars
+- GET /api/cars/{id}
 
 # API Endpoints
 
