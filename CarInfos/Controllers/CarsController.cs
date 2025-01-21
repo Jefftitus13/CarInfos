@@ -19,7 +19,9 @@ namespace CarInfo.Controllers
         {
             this.dbContext = dbContext;
         }
-        //Get methods
+
+       //Get methods
+
         [HttpGet(Name = "GetCarsInfos")]
         [Authorize]
         public IActionResult GetAllCars()
@@ -80,34 +82,44 @@ namespace CarInfo.Controllers
 
         private byte[] GenerateExcel(IEnumerable<Cars> cars)
         {
-            using(var package = new ExcelPackage())
+            try
             {
-                var worksheet = package.Workbook.Worksheets.Add("Cars");
-                worksheet.Cells[1, 1].Value = "Id";
-                worksheet.Cells[1, 2].Value = "Brand";
-                worksheet.Cells[1, 3].Value = "Model";
-                worksheet.Cells[1, 4].Value = "Year";
-                worksheet.Cells[1, 5].Value = "Color";
-                worksheet.Cells[1, 6].Value = "Price";
-                worksheet.Cells[1, 7].Value = "Description";
-                worksheet.Cells[1, 8].Value = "Mileage";
-                worksheet.Cells[1, 9].Value = "IsAvailable";
-
-                var row = 2;
-                foreach (var car in cars)
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                using (var package = new ExcelPackage())
                 {
-                    worksheet.Cells[row, 1].Value = car.Id;
-                    worksheet.Cells[row, 2].Value = car.Brand;
-                    worksheet.Cells[row, 3].Value = car.Model;
-                    worksheet.Cells[row, 4].Value = car.Year;
-                    worksheet.Cells[row, 5].Value = car.Color;
-                    worksheet.Cells[row, 6].Value = car.Price;
-                    worksheet.Cells[row, 7].Value = car.Description;
-                    worksheet.Cells[row, 8].Value = car.Mileage;
-                    worksheet.Cells[row, 9].Value = car.IsAvailable;
-                    row++;
+                    var worksheet = package.Workbook.Worksheets.Add("Cars");
+                    worksheet.Cells[1, 1].Value = "Id";
+                    worksheet.Cells[1, 2].Value = "Brand";
+                    worksheet.Cells[1, 3].Value = "Model";
+                    worksheet.Cells[1, 4].Value = "Year";
+                    worksheet.Cells[1, 5].Value = "Color";
+                    worksheet.Cells[1, 6].Value = "Price";
+                    worksheet.Cells[1, 7].Value = "Description";
+                    worksheet.Cells[1, 8].Value = "Mileage";
+                    worksheet.Cells[1, 9].Value = "IsAvailable";
+
+                    var row = 2;
+                    foreach (var car in cars)
+                    {
+                        worksheet.Cells[row, 1].Value = car.Id;
+                        worksheet.Cells[row, 2].Value = car.Brand;
+                        worksheet.Cells[row, 3].Value = car.Model;
+                        worksheet.Cells[row, 4].Value = car.Year;
+                        worksheet.Cells[row, 5].Value = car.Color;
+                        worksheet.Cells[row, 6].Value = car.Price;
+                        worksheet.Cells[row, 7].Value = car.Description;
+                        worksheet.Cells[row, 8].Value = car.Mileage;
+                        worksheet.Cells[row, 9].Value = car.IsAvailable;
+                        row++;
+                    }
+
+                    return package.GetAsByteArray();
                 }
-                return package.GetAsByteArray();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return Array.Empty<byte>();
             }
         }
     
