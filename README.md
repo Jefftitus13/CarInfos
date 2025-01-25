@@ -22,7 +22,7 @@ CarInfos is a RESTful API built using ASP.NET Core Web API and Entity Framework,
 
 ## Configuration
 1. Configure the connection string in `appsettings.json` to point to your preferred SQL Server database.
-2. Configure user roles and claims-based policies in `Startup.cs` or `Program.cs`.
+2. Configure user roles and claims-based policies in `Program.cs`.
 3. Add JWT secret keys and token settings in `appsettings.json`.
 
 ## Secured Endpoints
@@ -34,7 +34,7 @@ CarInfos is a RESTful API built using ASP.NET Core Web API and Entity Framework,
 ### Authenticated user operations:
 - GET /api/cars
 - GET /api/cars/{id}
-- Compare cars: POST /api/cars/compare
+- Compare cars: GET /api/cars/compare
 - Download data: GET /api/cars/download/csv or GET /api/cars/download/excel
 
 ## API Endpoints
@@ -62,6 +62,7 @@ Compare details of two cars side-by-side.
   "carId2": 7
 }
 #### Sample Response
+```Json
 {
   "car1": {
     "brand": "Nissan",
@@ -84,7 +85,7 @@ Compare details of two cars side-by-side.
     "mileageDifference": 11
   }
 }
-
+```
 
 ### **GET /api/cars/download/csv**
 Download the list of all cars in CSV format.
