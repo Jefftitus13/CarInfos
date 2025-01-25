@@ -9,7 +9,6 @@ CarInfos is a RESTful API built using ASP.NET Core Web API and Entity Framework,
 - **DELETE car**: Remove a car from the database using its ID.
 - **Compare cars**: Compare details of two cars side-by-side.
 - **Download car details**: Export car details in CSV or Excel format.
-- **Add images for cars**: Upload and retrieve images associated with cars.
 - **Authentication and Authorization**: Secure API endpoints using token-based authentication and role-based authorization.
 
 ## Technologies Used
