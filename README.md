@@ -57,12 +57,12 @@ Delete a car from the database by its ID.
 
 ### **POST /api/cars/compare**
 Compare details of two cars side-by-side.
-#### **Request Body
+#### Request Body
 {
   "carId1": 4,
   "carId2": 7
 }
-#### **Sample Response
+#### Sample Response
 {
   "car1": {
     "brand": "Nissan",
@@ -98,9 +98,9 @@ Download the list of all cars in Excel format.
 ID,Brand,Model,Year,Color,Price,Mileage,IsAvailable,Description
 4,Nissan,GTR,2005,Purple,350000,29,true,High-performance sports car.
 7,Ford,Mustang,2003,Light green,45000000,18,true,Iconic American muscle car.
-
-##Database Configuration
+```
+## Database Configuration
 This project uses Entity Framework Core to interact with the database. Ensure that you have a local SQL Server instance or use the appsettings.json file to configure a connection string for your preferred database.
 
-##Contributions
+## Contributions
 Feel free to fork this repository, open issues, and submit pull requests for enhancements or bug fixes.
