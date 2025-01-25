@@ -168,6 +168,11 @@ namespace CarInfo.Controllers
                     car2.Price,
                     car2.Mileage,
                     car2.Color
+                },
+                Comparison = new
+                {
+                    PriceDifference = Math.Abs(car1.Price - car2.Price),
+                    MileageDifference = Math.Abs(car1.Mileage - car2.Mileage)
                 }
             };
             
