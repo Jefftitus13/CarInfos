@@ -37,5 +37,8 @@ namespace CarInfos.Models.Entity
         public required int Mileage { get; set; }
 
         public bool IsAvailable { get; set; }
+
+        // Navigation Property
+        public ICollection<Favorite> Favorites { get; set; }
     }
 }

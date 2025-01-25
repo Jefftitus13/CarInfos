@@ -20,8 +20,7 @@ namespace CarInfo.Controllers
             this.dbContext = dbContext;
         }
 
-       //Get methods
-
+        #region Get methods
         [HttpGet(Name = "GetCarsInfos")]
         [Authorize]
         public IActionResult GetAllCars()
@@ -122,9 +121,62 @@ namespace CarInfo.Controllers
                 return Array.Empty<byte>();
             }
         }
-    
 
-        //Post method
+        [HttpGet("users/{userId}/favorites")]
+        public async Task<IActionResult> GetFavorites(int userId)
+        {
+            var favorites = await dbContext.Favorites
+                                           .Where(f => f.UserId == userId)
+                                           .Include(f => f.Car)
+                                           .ToListAsync();
+            
+            if (favorites == null || favorites.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(favorites.Select(f => f.Car));
+        }
+
+        [HttpGet("cars/compare")]
+        public async Task<IActionResult> CompareCars([FromQuery] int car1_id, [FromQuery] int car2_id)
+        {
+            var car1 = await dbContext.Cars.FindAsync(car1_id);
+            var car2 = await dbContext.Cars.FindAsync(car2_id);
+
+            if (car1 == null  || car2 == null)
+            {
+                return NotFound("Either one or both cars not found");
+            }
+
+            var comparison = new
+            {
+                Car1 = new
+                {
+                    car1.Brand,
+                    car1.Model,
+                    car1.Year,
+                    car1.Price,
+                    car1.Mileage,
+                    car1.Color
+                },
+                Car2 = new
+                {
+                    car2.Brand,
+                    car2.Model,
+                    car2.Year,
+                    car2.Price,
+                    car2.Mileage,
+                    car2.Color
+                }
+            };
+            
+            return Ok(comparison);
+        }
+
+        #endregion
+
+        #region Post methods
         [HttpPost]
         [Authorize]
         public IActionResult AddCars(AddCarsDto addCarsDto)
@@ -144,7 +196,32 @@ namespace CarInfo.Controllers
             dbContext.SaveChanges();
             return Ok(carsEntity);
         }
-        //Put method
+
+        [HttpPost("users/{userId}/favorites")]
+        public async Task<IActionResult> AddToFavorites(int userId, [FromBody] int carID)
+        {
+            var user = await dbContext.Users.FindAsync(userId);
+            var car = await dbContext.Cars.FindAsync(carID);
+
+            if (user==null || car==null)
+            {
+                return NotFound();
+            }
+
+            var favorite = new Favorite
+            {
+                UserId = userId,
+                CarId = carID
+            };
+
+            dbContext.Favorites.Add(favorite);
+            await dbContext.SaveChangesAsync();
+
+            return Ok(favorite);
+        }
+        #endregion
+
+        #region Put method
         [HttpPut]
         [Route("{id:int}")]
         [Authorize]
@@ -169,7 +246,9 @@ namespace CarInfo.Controllers
             dbContext.SaveChanges();
             return Ok(cars);
         }
-        //Delete method
+        #endregion
+
+        #region Delete method
         [HttpDelete]
         [Route("{id:int}")]
         [Authorize]
@@ -184,5 +263,6 @@ namespace CarInfo.Controllers
             dbContext.SaveChanges();
             return Ok("Record succefully deleted!");
         }
+        #endregion
     }
 }
