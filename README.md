@@ -10,6 +10,12 @@ CarInfos is a RESTful API built using ASP.NET Core Web API and Entity Framework,
 - **Compare cars**: Compare details of two cars side-by-side.
 - **Download car details**: Export car details in CSV or Excel format.
 - **Authentication and Authorization**: Secure API endpoints using token-based authentication and role-based authorization.
+- **Image Uploading, Editing, and Retrieving**:
+  - Store images/documents on disk (local file system).
+  - Upload images while adding car details.
+  - Retrieve and update images linked to specific cars.
+- **Car Analytics**:
+  - Filtering cars by most searched brand and model names.
 
 ## Technologies Used
 - **ASP.NET Core Web API**: A framework for building APIs in .NET.
@@ -19,6 +25,7 @@ CarInfos is a RESTful API built using ASP.NET Core Web API and Entity Framework,
 - **RESTful API**: Adherence to REST principles ensures stateless communication.
 - **EPPlus**: A library for generating Excel files.
 - **CsvHelper**: A library for generating CSV files.
+- **Local File System**: Store images and documents on the server's disk, ensuring efficient retrieval and updates.
 
 ## Configuration
 1. Configure the connection string in `appsettings.json` to point to your preferred SQL Server database.
@@ -199,6 +206,69 @@ Download the list of all cars in CSV format.
 
 ### **GET /api/cars/download/excel**
 Download the list of all cars in Excel format.
+
+### **GET /api/cars/{id}/image
+Retrieve the image of a specific car.
+
+### **POST /api/cars/{id}/upload-image
+Upload an image for a specific car. Images are stored on the local file system.
+```Json
+{
+  "message": "Image uploaded successfully.",
+  "filePath": "wwwroot/images/cars/car1.jpg"
+}
+```
+
+### **GET /api/cars/analytics
+Generate analytical insights about the cars in the database.
+```Json
+{
+  "mostPopularBrands": [
+    {
+      "brand": "Toyota",
+      "count": 3
+    },
+    {
+      "brand": "Honda",
+      "count": 2
+    },
+    {
+      "brand": "Nissan",
+      "count": 1
+    },
+    {
+      "brand": "Porsche",
+      "count": 1
+    },
+    {
+      "brand": "Tata",
+      "count": 1
+    }
+  ],
+  "mostPopularModels": [
+    {
+      "model": "Supra",
+      "count": 3
+    },
+    {
+      "model": "Virtus",
+      "count": 1
+    },
+    {
+      "model": "911",
+      "count": 1
+    },
+    {
+      "model": "Altroz",
+      "count": 1
+    },
+    {
+      "model": "City",
+      "count": 1
+    }
+  ]
+}
+```
 
 #### Sample CSV Data
 ```csv
