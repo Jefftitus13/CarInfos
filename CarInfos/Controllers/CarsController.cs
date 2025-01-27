@@ -20,6 +20,8 @@ namespace CarInfo.Controllers
             this.dbContext = dbContext;
         }
 
+//-------------------------------------------------------GET Methods--------------------------------------------------
+
         #region Get methods
         [HttpGet(Name = "GetCarsInfos")]
         [Authorize]
@@ -70,11 +72,11 @@ namespace CarInfo.Controllers
         private string GenerateCsv(IEnumerable<Cars> cars)
         {
             var csvBuilder = new StringBuilder();
-            csvBuilder.AppendLine("Id,Brand,Model,Year,Color,Price,Description,Mileage,IsAvailable");
+            csvBuilder.AppendLine("Id,Brand,Model,Year,Color,Price,Description,Mileage,IsAvailable,ImagePath");
             
             foreach (var car in cars)
             {
-                csvBuilder.AppendLine($"{car.Id},{car.Brand},{car.Model},{car.Year},{car.Color},{car.Price},{car.Description},{car.Mileage},{car.IsAvailable}");
+                csvBuilder.AppendLine($"{car.Id},{car.Brand},{car.Model},{car.Year},{car.Color},{car.Price},{car.Description},{car.Mileage},{car.IsAvailable},{car.ImagePath}");
             }
             return csvBuilder.ToString();
         }
@@ -96,6 +98,7 @@ namespace CarInfo.Controllers
                     worksheet.Cells[1, 7].Value = "Description";
                     worksheet.Cells[1, 8].Value = "Mileage";
                     worksheet.Cells[1, 9].Value = "IsAvailable";
+                    worksheet.Cells[1, 10].Value = "ImagePath";
 
                     var row = 2;
                     foreach (var car in cars)
@@ -109,6 +112,7 @@ namespace CarInfo.Controllers
                         worksheet.Cells[row, 7].Value = car.Description;
                         worksheet.Cells[row, 8].Value = car.Mileage;
                         worksheet.Cells[row, 9].Value = car.IsAvailable;
+                        worksheet.Cells[row, 10].Value = car.ImagePath;
                         row++;
                     }
 
@@ -179,7 +183,59 @@ namespace CarInfo.Controllers
             return Ok(comparison);
         }
 
+        [HttpGet("cars/analytics")]
+        public async Task<IActionResult> GetCarAnalytics()
+        {
+            var mostPopularBrands = await dbContext.Cars
+                .GroupBy(c => c.Brand)
+                .Select(group => new
+                {
+                    Brand = group.Key,
+                    Count = group.Count()
+                })
+                .OrderByDescending(g => g.Count)
+                .Take(5)
+                .ToListAsync();
+
+            var mostPopularModels = await dbContext.Cars
+                .GroupBy(c => c.Model)
+                .Select(group => new
+                {
+                    Model = group.Key,
+                    Count = group.Count()
+                })
+                .OrderByDescending(g => g.Count)
+                .Take(5)
+                .ToListAsync();
+
+            return Ok(new
+            {
+                MostPopularBrands = mostPopularBrands,
+                MostPopularModels = mostPopularModels
+            });
+        }
+
+        [HttpGet("cars/{carId}/image")]
+        public async Task<IActionResult> GetCarImage(int carId)
+        {
+            var car = await dbContext.Cars.FindAsync(carId);
+            if (car == null) return NotFound("Car not found.");
+
+            if (string.IsNullOrEmpty(car.ImagePath))
+                return NotFound("Image not found.");
+
+            var filePath = Path.Combine("wwwroot", car.ImagePath.TrimStart('/'));
+            if (!System.IO.File.Exists(filePath))
+                return NotFound("File does not exist.");
+
+            // Return file as a response
+            var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+            var contentType = "image/jpeg";
+            return File(fileBytes, contentType);
+        }
         #endregion
+
+//---------------------------------------------------POST Methods--------------------------------------------
 
         #region Post methods
         [HttpPost]
@@ -224,7 +280,39 @@ namespace CarInfo.Controllers
 
             return Ok(favorite);
         }
+
+        [HttpPost("cars/{carId}/upload")]
+        public async Task<IActionResult> UploadFile(int carId, IFormFile file)
+        {
+            var car = await dbContext.Cars.FindAsync(carId);
+            if (car == null) return NotFound("Car not found.");
+
+            if (file == null || file.Length == 0)
+                return BadRequest("Invalid file.");
+
+            // Defining the directory and file name
+            var uploadsDir = Path.Combine("wwwroot", "uploads");
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            var filePath = Path.Combine(uploadsDir, fileName);
+
+            // Ensuring directory exists
+            Directory.CreateDirectory(uploadsDir);
+
+            // Saving file to local storage
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            // Save file path in the database
+            car.ImagePath = $"/uploads/{fileName}";
+            await dbContext.SaveChangesAsync();
+
+            return Ok(new { Message = "File uploaded successfully", FilePath = car.ImagePath });
+        }
         #endregion
+
+//--------------------------------------------------PUT Methods-------------------------------------------------------
 
         #region Put method
         [HttpPut]
@@ -251,7 +339,52 @@ namespace CarInfo.Controllers
             dbContext.SaveChanges();
             return Ok(cars);
         }
+
+        [HttpPut("cars/{carId}/image")]
+        public async Task<IActionResult> UpdateCarImage(int carId, IFormFile newImage)
+        {
+            var car = await dbContext.Cars.FindAsync(carId);
+            if (car == null) return NotFound("Car not found.");
+
+            // Validating the new image file
+            if (newImage == null || newImage.Length == 0)
+                return BadRequest("Invalid new image file.");
+
+            // Checking existing image
+            if (!string.IsNullOrEmpty(car.ImagePath))
+            {
+                // Deleting the old image from the file system
+                var oldFilePath = Path.Combine("wwwroot", car.ImagePath.TrimStart('/'));
+                if (System.IO.File.Exists(oldFilePath))
+                {
+                    System.IO.File.Delete(oldFilePath);
+                }
+            }
+
+            // Saving the new image to the file system
+            var uploadsDir = Path.Combine("wwwroot", "uploads");
+            var newFileName = $"{Guid.NewGuid()}{Path.GetExtension(newImage.FileName)}";
+            var newFilePath = Path.Combine(uploadsDir, newFileName);
+
+            // Ensuring the uploads directory exists
+            Directory.CreateDirectory(uploadsDir);
+
+            // Saving the new image file
+            using (var stream = new FileStream(newFilePath, FileMode.Create))
+            {
+                await newImage.CopyToAsync(stream);
+            }
+
+            // Updating the database with the new image path
+            car.ImagePath = $"/uploads/{newFileName}";
+            await dbContext.SaveChangesAsync();
+
+            return Ok(new { Message = "Image updated successfully.", FilePath = car.ImagePath });
+        }
+
         #endregion
+
+//--------------------------------------------------------DELETE Methods----------------------------------------------------
 
         #region Delete method
         [HttpDelete]

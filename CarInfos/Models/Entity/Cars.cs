@@ -40,5 +40,8 @@ namespace CarInfos.Models.Entity
 
         // Navigation Property
         public ICollection<Favorite> Favorites { get; set; }
+
+        //Store images
+        public string ImagePath { get; set; }
     }
 }

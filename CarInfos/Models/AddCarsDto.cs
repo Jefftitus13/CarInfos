@@ -32,6 +32,6 @@ namespace CarInfos.Models
         public required int Mileage { get; set; }
 
         public bool IsAvailable { get; set; }
-    
+
     }
 }
